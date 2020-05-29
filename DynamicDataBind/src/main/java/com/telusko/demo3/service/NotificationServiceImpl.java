@@ -25,12 +25,12 @@ public class NotificationServiceImpl implements NotificationService {
 
 	@Override
 	public <T> T fetchDataById(String id, String entityName) {
-		T t = null;
+		T genericData = null;
 		Class<?> c = getEntityClass(entityManager, entityName);
 		if(c == null) throw new EntityNotFoundException("Entity NOT available");
-		t = (T) entityManager.find(c, id);
-		if(t == null) throw new EntityNotFoundException("Record for Entity is not available");
-		return t;
+		genericData = (T) entityManager.find(c, id);
+		if(genericData == null) throw new EntityNotFoundException("Record for Entity is not available");
+		return genericData;
 	}
 
 	/**
@@ -51,9 +51,9 @@ public class NotificationServiceImpl implements NotificationService {
 
 	@Override
 	public <T> T fetchDataMap(String referenceId, String template) {
-		T t = null;
+		T genericData = null;
 		String entityName= null;
-		List<String> varlist =null;
+		List<String> variableList =null;
 		Map<String, String> dataMap = new HashMap<>();
 		//Get notification row
 		Notification nrow=entityManager.find(Notification.class, template);
@@ -61,20 +61,20 @@ public class NotificationServiceImpl implements NotificationService {
 		if(nrow == null) throw new EntityNotFoundException("No Mapping available for template");
 		if(nrow != null && nrow.getEntityName()!= null) {
 			entityName = nrow.getEntityName();
-			varlist = getvarListfrmDesc(nrow.getNotificatioDesc());
+			variableList = getvarListfrmDesc(nrow.getNotificatioDesc());
 		}
 		//Fetch Entity row with reference id
-		t = fetchDataById(referenceId, entityName);
+		genericData = fetchDataById(referenceId, entityName);
 		
 		// for each key in varlist, get value from t
-		System.out.println(t);
-		System.out.println(varlist);
-		for(String s: varlist) {
-			String val = getValFromField(s,t);
+		System.out.println(genericData);
+		System.out.println(variableList);
+		for(String s: variableList) {
+			String val = getValFromField(s,genericData);
 			dataMap.put(s, val);
 		}
 		
-		System.out.println(varlist);
+		System.out.println(variableList);
 		return (T)dataMap;
 	}
 
@@ -120,18 +120,17 @@ public class NotificationServiceImpl implements NotificationService {
 	 * Helper method to get all dynamic values for $ fields.
 	 */
 	private List<String> getvarListfrmDesc(String str) {
-		//String str = "Approve_DEL SDM ${addressLine1} was approved and ${addressLine2} ready for use by ${pinCode}.";
-		List<String> varlist = new ArrayList<>();
+		List<String> dynamicVaribaleList = new ArrayList<>();
 		Pattern pattern = Pattern.compile("\\$\\{(.*?)}");
 		Matcher matcher = pattern.matcher(str);
 		while (matcher.find()) {
-		    String s =matcher.group();
+		    String dynamicVariable = matcher.group();
 		    //add valid fields to list
-		    if(s != null && s.length()>3) {
-		    	varlist.add(s.substring(2,s.length()-1));
+		    if(dynamicVariable != null && dynamicVariable.length()>3) {
+		    	dynamicVaribaleList.add(dynamicVariable.substring(2,dynamicVariable.length()-1));
 		    }
 		}
-		return varlist;
+		return dynamicVaribaleList;
 	}
 
 }

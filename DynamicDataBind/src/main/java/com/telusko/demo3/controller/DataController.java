@@ -1,17 +1,11 @@
 package com.telusko.demo3.controller;
 
-import java.util.Optional;
-
-import javax.persistence.EntityManager;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.telusko.demo3.model.Company;
-import com.telusko.demo3.model.Notification;
 import com.telusko.demo3.repo.CompanyRepo;
 import com.telusko.demo3.service.NotificationService;
 
@@ -24,21 +18,14 @@ public class DataController {
 	
 	@Autowired
 	CompanyRepo companyrepo;
-	
-	@Autowired
-	EntityManager em;
 
+	
+	/**
+	 * Test URL to Check health of API
+	 */
 	@GetMapping("/getnotification")
 	public String getNotificationData() {
 		return "Hello";
-	}
-
-	@GetMapping("/getnotification/{id}")
-	public Notification getNotification(@PathVariable("id") String id) {
-
-		Notification nrow = em.find(Notification.class, id);
-		return nrow;
-
 	}
 
 	@GetMapping("/getnotification/{id}/data/{entity}")

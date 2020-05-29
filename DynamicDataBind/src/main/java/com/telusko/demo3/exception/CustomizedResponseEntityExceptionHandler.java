@@ -25,9 +25,16 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 
 	
 	@ExceptionHandler(EntityNotFoundException.class)
-	public final ResponseEntity<Object> handleEntityNotFoundExceptions(Exception ex, WebRequest request) throws EntityNotFoundException {
+	public final ResponseEntity<Object> handleEntityNotFoundExceptions(EntityNotFoundException ex, WebRequest request) throws EntityNotFoundException {
 		ExceptionResponse response = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
 		return new ResponseEntity(response, HttpStatus.UNPROCESSABLE_ENTITY);
+
+	}
+	
+	@ExceptionHandler(NoSuchFieldException.class)
+	public final ResponseEntity<Object> handleEntityNoSuchFieldExceptions(NoSuchFieldException ex, WebRequest request) throws NoSuchFieldException {
+		ExceptionResponse response = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
+		return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
 	
