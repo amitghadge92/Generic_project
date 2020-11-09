@@ -1,3 +1,2 @@
 # Generic_project
-All the test projects bundled here
-This directory should consist of individual APIs.
+This is Generic Data fetch API for retrieving data from any entities in the project.
